@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>GoVPN Dashboard Preview</title>
+   
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="avatar"></div>
+                <h2>Ahmed</h2>
+                <p>Pro Plan</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Account Settings</a></li>
+                    <li><a href="#">Billing</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="main-content">
+            <h1>Welcome to Your GoVPN Dashboard</h1>
+            <div class="credit-card">
+                <div class="credit-card-inner">
+                    <div class="credit-card-front">
+                        <h3>GoVPN Pro</h3>
+                        <p>**** **** **** 1234</p>
+                        <p>John Doe</p>
+                        <p>Exp: 12/25</p>
+                    </div>
+                    <div class="credit-card-back">
+                        <p>CVV: ***</p>
+                    </div>
+                </div>
+            </div>
+            <div class="connection-status">
+                <h2>Connection Status</h2>
+                <div id="status-indicator" class="disconnected">
+                    Disconnected
+                </div>
+                <button id="connect-disconnect" class="btn connect">
+                    Connect
+                </button>
+            </div>
+            <div class="server-selection">
+                <h2>Select a Server</h2>
+                <select id="server-list">
+                    <option value="">Choose a server</option>
+                    <option value="1">New York - USA</option>
+                    <option value="2">London - UK</option>
+                    <option value="3">Tokyo - Japan</option>
+                    <option value="4">Sydney - Australia</option>
+                    <option value="5">Frankfurt - Germany</option>
+                    <option value="6">Singapore - Singapore</option>
+                    <option value="7">Toronto - Canada</option>
+                    <option value="8">Paris - France</option>
+                    <option value="9">Amsterdam - Netherlands</option>
+                    <option value="10">Sao Paulo - Brazil</option>
+                </select>
+            </div>
+            <div class="usage-stats">
+                <h2>Usage Statistics</h2>
+                <div class="stat">
+                    <span>Data Used</span>
+                    <span id="data-used">0 MB</span>
+                </div>
+                <div class="stat">
+                    <span>Time Connected</span>
+                    <span id="time-connected">0h 0m</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const connectDisconnectBtn = document.getElementById('connect-disconnect');
+            const statusIndicator = document.getElementById('status-indicator');
+            const serverList = document.getElementById('server-list');
+            const dataUsed = document.getElementById('data-used');
+            const timeConnected = document.getElementById('time-connected');
+
+            let isConnected = false;
+            let connectionInterval;
+            let dataUsage = 0;
+            let timeUsage = 0;
+
+            connectDisconnectBtn.addEventListener('click', function() {
+                if (!isConnected) {
+                    if (!serverList.value) {
+                        alert('Please select a server');
+                        return;
+                    }
+                    statusIndicator.textContent = `Connected to ${serverList.options[serverList.selectedIndex].text}`;
+                    statusIndicator.classList.remove('disconnected');
+                    statusIndicator.classList.add('connected');
+                    this.textContent = 'Disconnect';
+                    this.classList.remove('connect');
+                    this.classList.add('disconnect');
+                    isConnected = true;
+                    startConnectionTimer();
+                } else {
+                    statusIndicator.textContent = 'Disconnected';
+                    statusIndicator.classList.remove('connected');
+                    statusIndicator.classList.add('disconnected');
+                    this.textContent = 'Connect';
+                    this.classList.remove('disconnect');
+                    this.classList.add('connect');
+                    isConnected = false;
+                    stopConnectionTimer();
+                }
+            });
+
+            function startConnectionTimer() {
+                connectionInterval = setInterval(() => {
+                    timeUsage++;
+                    dataUsage += Math.floor(Math.random() * 10) + 1; // Simulating random data usage
+                    updateUsageStats();
+                }, 1000);
+            }
+
+            function stopConnectionTimer() {
+                clearInterval(connectionInterval);
+                timeUsage = 0;
+                dataUsage = 0;
+                updateUsageStats();
+            }
+
+            function updateUsageStats() {
+                const hours = Math.floor(timeUsage / 3600);
+                const minutes = Math.floor((timeUsage % 3600) / 60);
+                timeConnected.textContent = `${hours}h ${minutes}m`;
+                dataUsed.textContent = `${dataUsage} MB`;
+            }
+        });
+    </script>
+</body>
+</html>
